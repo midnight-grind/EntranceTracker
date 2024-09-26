@@ -24,6 +24,20 @@
   color: white;
 }
 
+.box {
+  width: 60px;
+  height: 20px;
+  background-color: lightblue;
+  border: 2px solid black;
+  display: inline-block;
+}
+
+.space {
+  width: 30px;
+  height: 20px;
+  display: inline-block;
+}
+
 .App-link {
   color: #61dafb;
 }
