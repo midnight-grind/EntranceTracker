@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    justify-content: space-between; /* Space between items */
+    width: 100%;
+    padding: 20px;
+  }
+  
+  .left {
+    justify-content: flex-start;
+  }
+  
+  .right {
+    display: flex;
+    gap: 10px; /* Space between the boxes */
+  }
