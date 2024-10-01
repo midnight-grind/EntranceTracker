@@ -23,7 +23,7 @@ function CSVReader() {
       {/* Input for uploading CSV */}
       <input type="file" accept=".csv" onChange={handleFileUpload} />
       {/* Display parsed CSV data */}
-      {/* <pre>{JSON.stringify(csvData, null, 2)}</pre> */}
+      <pre>{JSON.stringify(csvData, null, 2)}</pre>
     </div>
   );
 }

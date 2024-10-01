@@ -3,7 +3,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  /* background-color: #282c34; */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -36,4 +36,10 @@
   display: flex;
   justify-content: center; /* Center the boxes horizontally inside nodegroup */
   gap: 10px;               /* Space between the boxes */
+}
+
+body, html {
+  background-color: burlywood; /* Ensure the whole page has the same background */
+  margin: 0; /* Remove margins to avoid any space around */
+  height: 100%; /* Ensure full page height */
 }
