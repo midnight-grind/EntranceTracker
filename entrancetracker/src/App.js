@@ -23,11 +23,11 @@ function App() {
       <div className="top-left">
         <CSVReader/>
       </div>
-      <div className="container">
+      {/* <div className="container">
         <div className="nodegroup">
           <NodeGroup/>
         </div>
-      </div>
+      </div> */}
 
 
 
