@@ -17,6 +17,20 @@ function CSVReader() {
     }
   };
 
+  const locations = new Map();
+
+  const location = {
+    name: "",
+    connectingLocations: [],
+  };
+
+  const doors = {
+    location: "",
+    entranceDoor: "",
+    exitDoor: "",
+    oneWay: false,
+  }
+
   return (
     <div>
       {/* <h1>Upload CSV</h1> */}
