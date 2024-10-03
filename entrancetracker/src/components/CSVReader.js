@@ -3,8 +3,8 @@ import Papa from 'papaparse';
 
 function CSVReader() {
 	const [csvData, setCsvData] = useState([]);
-	const [startLocation, setStartLocation] = useState(''); // Initialize start location
-	const [endLocation, setEndLocation] = useState('');     // Initialize end location
+	const [startLocation, setStartLocation] = useState('Gohma'); // Initialize start location
+	const [endLocation, setEndLocation] = useState('Deku Tree');     // Initialize end location
 	const [locations, setLocations] = useState(new Map());
 
 
@@ -29,24 +29,36 @@ function CSVReader() {
 		// 	alert(`No path found from ${startLocation} to ${endLocation}`);
 		// }
 
-		findPath(startLocation, endLocation, []);
-
-		console.log("startLocation:", startLocation);
+		console.log("\n\n\nendLocation:", endLocation);
+		console.log("path:", findPath(startLocation, endLocation, []));
 	};
 
 
 	function findPath(currentLocation, endLocation, searchedLocations)
-	{
-    let currentLocationBringsToArray = locations.get(currentLocation);
+	{    
+		let currentLocationBringsToArray = locations.get(currentLocation);
+		console.log("\ncurrentLocation", currentLocation);
+		console.log("searchedLocations", searchedLocations);
+		console.log("currentLocationBringsToArray", currentLocationBringsToArray);
+		
+		console.log("adding " + currentLocation + " to searched locations");
+		searchedLocations.push(currentLocation);
 
-    if (searchedLocations.includes(currentLocation))
-      return [];
-    
-    searchedLocations.push(currentLocation);
+		// we've arrived at the end location, return each location it took to get here
+		if (currentLocation == endLocation)
+		{
+			console.log("reached end location");	
+			return searchedLocations;
+		}
 
     for (let i=0; i<currentLocationBringsToArray.length; i++)
     {
-      return findPath(currentLocationBringsToArray[i], endLocation, searchedLocations);
+			let nextLocation = currentLocationBringsToArray[i];
+
+			if (!searchedLocations.includes(currentLocation))
+      	return findPath(nextLocation, endLocation, searchedLocations);
+			else 
+				console.log("already visited " + currentLocation);
     }
     
 		console.log("currentLocationBringsToArray:", currentLocationBringsToArray);
@@ -57,18 +69,20 @@ function CSVReader() {
 		
 		for (let i=0; i < csvData.length; i++)
 		{
-			if (csvData.length > 0 && csvData[i]["Coming from"])
+			let coming_from = csvData[i]["Coming from"];
+			let brings_you_to = csvData[i]["Brings you to"];
+			
+			if (csvData.length > 0 && coming_from)
 			{
+				if (!locations.has(coming_from))
+					locations.set(coming_from, []); // new location found, add to map
 
-				if (!locations.has(csvData[i]["Coming from"]))
-					locations.set(csvData[i]["Coming from"], []); // add new map key
+				const childLocations = locations.get(coming_from);
 
-				const connectingLocations = locations.get(csvData[i]["Coming from"]);
-
-				if (!connectingLocations.includes(csvData[i]["Brings you to"]))
-					connectingLocations.push(csvData[i]["Brings you to"]);
+				if (!childLocations.includes(brings_you_to))
+					childLocations.push(brings_you_to);
 				
-				locations.set(csvData[i]["Coming from"], connectingLocations);
+				locations.set(coming_from, childLocations);
 			}
 
 
