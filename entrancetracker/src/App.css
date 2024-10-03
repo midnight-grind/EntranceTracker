@@ -39,7 +39,7 @@
 }
 
 body, html {
-  background-color: burlywood; /* Ensure the whole page has the same background */
+  background-color: rosybrown; /* Ensure the whole page has the same background */
   margin: 0; /* Remove margins to avoid any space around */
   height: 100%; /* Ensure full page height */
 }

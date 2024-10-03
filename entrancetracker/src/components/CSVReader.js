@@ -29,18 +29,27 @@ function CSVReader() {
 		// 	alert(`No path found from ${startLocation} to ${endLocation}`);
 		// }
 
-		findPath(startLocation, endLocation);
+		findPath(startLocation, endLocation, []);
 
 		console.log("startLocation:", startLocation);
 	};
 
 
-	function findPath(currentLocation, endLocation)
+	function findPath(currentLocation, endLocation, searchedLocations)
 	{
-		console.log(locations);
-		// console.log(locations.get(currentLocation));
-		// let currentLocationObject = locations.get(currentLocation);
-		// console.log(currentLocationObject);
+    let currentLocationBringsToArray = locations.get(currentLocation);
+
+    if (searchedLocations.includes(currentLocation))
+      return [];
+    
+    searchedLocations.push(currentLocation);
+
+    for (let i=0; i<currentLocationBringsToArray.length; i++)
+    {
+      return findPath(currentLocationBringsToArray[i], endLocation, searchedLocations);
+    }
+    
+		console.log("currentLocationBringsToArray:", currentLocationBringsToArray);
 	}
 
 	useEffect(() => {
