@@ -37,12 +37,13 @@ function CSVReader() {
 	function findPath(currentLocation, endLocation, searchedLocations)
 	{    
 		let currentLocationBringsToArray = locations.get(currentLocation);
-		console.log("\ncurrentLocation", currentLocation);
-		console.log("searchedLocations", searchedLocations);
-		console.log("currentLocationBringsToArray", currentLocationBringsToArray);
+		// console.log("\ncurrentLocation", currentLocation);
+		// console.log("searchedLocations", searchedLocations);
+		// console.log("currentLocationBringsToArray", currentLocationBringsToArray);
 		
-		console.log("adding " + currentLocation + " to searched locations");
+		// console.log("adding " + currentLocation + " to searched locations");
 		searchedLocations.push(currentLocation);
+    console.log("searched locations: " + searchedLocations);
 
 		// we've arrived at the end location, return each location it took to get here
 		if (currentLocation == endLocation)
@@ -50,18 +51,24 @@ function CSVReader() {
 			console.log("reached end location");	
 			return searchedLocations;
 		}
+    
+    console.log("currentLocationBringsToArray length: " + currentLocationBringsToArray.length);
 
     for (let i=0; i<currentLocationBringsToArray.length; i++)
     {
+      console.log(i);
 			let nextLocation = currentLocationBringsToArray[i];
 
-			if (!searchedLocations.includes(currentLocation))
+			if (!searchedLocations.includes(nextLocation))
+      {
+        console.log("haven't searched " + nextLocation + ", searching now");
       	return findPath(nextLocation, endLocation, searchedLocations);
+      }
 			else 
-				console.log("already visited " + currentLocation);
+				console.log("already visited " + nextLocation);
     }
     
-		console.log("currentLocationBringsToArray:", currentLocationBringsToArray);
+		console.log("currentLocation: " + currentLocation + "brings to:", currentLocationBringsToArray);
 	}
 
 	useEffect(() => {
