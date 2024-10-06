@@ -30,9 +30,31 @@ function CSVReader() {
 		// }
 
 		console.log("\n\n\nendLocation:", endLocation);
-		console.log("path:", findPath(startLocation, endLocation, []));
-	};
+		// console.log("path:", findPath(startLocation, endLocation, []));
+    let all_paths = [];
+    console.log("path:", findPath2(startLocation, endLocation, searched_locations_temp, all_paths));
 
+    console.log("searched locations: " + searched_locations);
+  };
+
+  function findPath2(current_location, target_location, searched_locations_temp, searched_locations_global)
+  {
+    let next_locations = locations.get(current_location);
+    let searched_locations_copy = [...searched_locations]; // Make a copy of the array
+
+    searched_locations_copy.push(current_location);
+
+    if (next_locations.includes(target_location))
+    {
+      searched_locations_copy.push(target_location);
+      return searched_locations_copy;
+    }
+
+    for (let location of next_locations)
+    {
+      console.log(location);
+    }
+}
 
 	function findPath(currentLocation, endLocation, searchedLocations)
 	{    
@@ -46,22 +68,28 @@ function CSVReader() {
     console.log("searched locations: " + searchedLocations);
 
 		// we've arrived at the end location, return each location it took to get here
-		if (currentLocation == endLocation)
-		{
-			console.log("reached end location");	
-			return searchedLocations;
-		}
+		// if (currentLocation == endLocation)
+		// {
+		// 	console.log("reached end location");	
+		// 	return searchedLocations;
+		// }
+
+    if (currentLocationBringsToArray.includes(endLocation))
+    {
+      searchedLocations.push(endLocation);
+      return searchedLocations;
+    }
     
-    console.log("currentLocationBringsToArray length: " + currentLocationBringsToArray.length);
+    // console.log("currentLocationBringsToArray length: " + currentLocationBringsToArray.length);
 
     for (let i=0; i<currentLocationBringsToArray.length; i++)
     {
-      console.log(i);
+      // console.log(i);
 			let nextLocation = currentLocationBringsToArray[i];
 
 			if (!searchedLocations.includes(nextLocation))
       {
-        console.log("haven't searched " + nextLocation + ", searching now");
+        // console.log("haven't searched " + nextLocation + ", searching now");
       	return findPath(nextLocation, endLocation, searchedLocations);
       }
 			else 
