@@ -29,32 +29,43 @@ function CSVReader() {
 		// 	alert(`No path found from ${startLocation} to ${endLocation}`);
 		// }
 
-		console.log("\n\n\nendLocation:", endLocation);
+		console.log("\n\n\nend location:", endLocation + '\n\n');
 		// console.log("path:", findPath(startLocation, endLocation, []));
     let all_paths = [];
-    console.log("path:", findPath2(startLocation, endLocation, searched_locations_temp, all_paths));
+    // console.log("path:", findPath2(startLocation, endLocation, [], all_paths));
+		findPath2(startLocation, endLocation, [], all_paths)
 
-    console.log("searched locations: " + searched_locations);
+		console.log("All Paths:", JSON.stringify(all_paths, null, 2));
+
+		for (let path in all_paths)
+		{
+			console.log(path);
+		}
   };
 
-  function findPath2(current_location, target_location, searched_locations_temp, searched_locations_global)
-  {
-    let next_locations = locations.get(current_location);
-    let searched_locations_copy = [...searched_locations]; // Make a copy of the array
+	function findPath2(current_location, target_location, searched_locations_temp, all_paths) {
+    let next_locations = locations.get(current_location) || [];
+    let searched_locations_copy = [...searched_locations_temp]; // Make a copy of the array
 
     searched_locations_copy.push(current_location);
 
-    if (next_locations.includes(target_location))
-    {
-      searched_locations_copy.push(target_location);
-      return searched_locations_copy;
+    if (next_locations.includes(target_location)) {
+        let path_to_target = [...searched_locations_copy];
+        path_to_target.push(target_location);
+        all_paths.push(path_to_target);
+        // Instead of returning here, let it continue to search for other paths
     }
 
-    for (let location of next_locations)
-    {
-      console.log(location);
+    for (let next_location of next_locations) {
+        // Prevent revisiting locations
+        if (!searched_locations_copy.includes(next_location)) {
+            findPath2(next_location, target_location, searched_locations_copy, all_paths);
+        }
     }
-}
+	}
+
+
+
 
 	function findPath(currentLocation, endLocation, searchedLocations)
 	{    
