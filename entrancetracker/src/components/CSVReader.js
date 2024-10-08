@@ -7,7 +7,6 @@ function CSVReader() {
 	const [endLocation, setEndLocation] = useState('Deku Tree');     // Initialize end location
 	const [locations, setLocations] = useState(new Map());
 
-
 	// Handle file upload
 	const handleFileUpload = (event) => {
 		const file = event.target.files[0];
@@ -31,37 +30,67 @@ function CSVReader() {
 
 		console.log("\n\n\nend location:", endLocation + '\n\n');
 		// console.log("path:", findPath(startLocation, endLocation, []));
-    let all_paths = [];
-    // console.log("path:", findPath2(startLocation, endLocation, [], all_paths));
+		let all_paths = [];
+		// console.log("path:", findPath2(startLocation, endLocation, [], all_paths));
 		findPath2(startLocation, endLocation, [], all_paths)
 
-		console.log("All Paths:", JSON.stringify(all_paths, null, 2));
+		// console.log("All Paths:", JSON.stringify(all_paths, null, 2));
 
-		for (let path in all_paths)
+		let all_paths_final = [];
+
+		for (let path of all_paths)
 		{
-			console.log(path);
+			let final_path = [];
+			// console.log(path.join(' -> ')); // Print each path in a readable format
+			for (let location of path)
+			{
+				if (location != endLocation)
+					final_path.push(location);
+				else
+					break;
+			}
+			final_path.push(endLocation);
+
+			all_paths_final.push(final_path);
 		}
-  };
+
+		let shortest_path = null;
+
+		for (let path of all_paths_final)
+		{
+			if (!shortest_path)
+				shortest_path = path;
+			
+			else if (path.length < shortest_path.length)
+			{
+				shortest_path = path;
+			}
+	
+		}
+		
+		console.log(all_paths_final);
+		console.log(shortest_path);
+  	};
 
 	function findPath2(current_location, target_location, searched_locations_temp, all_paths) {
-    let next_locations = locations.get(current_location) || [];
-    let searched_locations_copy = [...searched_locations_temp]; // Make a copy of the array
+		let next_locations = locations.get(current_location) || [];
+		let searched_locations_copy = [...searched_locations_temp]; // Make a copy of the array
 
-    searched_locations_copy.push(current_location);
+		searched_locations_copy.push(current_location);
 
-    if (next_locations.includes(target_location)) {
-        let path_to_target = [...searched_locations_copy];
-        path_to_target.push(target_location);
-        all_paths.push(path_to_target);
-        // Instead of returning here, let it continue to search for other paths
-    }
+		if (next_locations.includes(target_location)) {
+			let path_to_target = [...searched_locations_copy];
+			path_to_target.push(target_location);
+			all_paths.push(path_to_target);
+			// Instead of returning here, let it continue to search for other paths
+		}
 
-    for (let next_location of next_locations) {
-        // Prevent revisiting locations
-        if (!searched_locations_copy.includes(next_location)) {
-            findPath2(next_location, target_location, searched_locations_copy, all_paths);
-        }
-    }
+		for (let next_location of next_locations)
+		{
+			// Prevent revisiting locations
+			if (!searched_locations_copy.includes(next_location))
+			findPath2(next_location, target_location, searched_locations_copy, all_paths);
+		}
 	}
 
 
@@ -73,10 +102,10 @@ function CSVReader() {
 		// console.log("\ncurrentLocation", currentLocation);
 		// console.log("searchedLocations", searchedLocations);
 		// console.log("currentLocationBringsToArray", currentLocationBringsToArray);
-		
+
 		// console.log("adding " + currentLocation + " to searched locations");
 		searchedLocations.push(currentLocation);
-    console.log("searched locations: " + searchedLocations);
+		console.log("searched locations: " + searchedLocations);
 
 		// we've arrived at the end location, return each location it took to get here
 		// if (currentLocation == endLocation)
@@ -85,28 +114,28 @@ function CSVReader() {
 		// 	return searchedLocations;
 		// }
 
-    if (currentLocationBringsToArray.includes(endLocation))
-    {
-      searchedLocations.push(endLocation);
-      return searchedLocations;
-    }
-    
-    // console.log("currentLocationBringsToArray length: " + currentLocationBringsToArray.length);
+		if (currentLocationBringsToArray.includes(endLocation))
+		{
+			searchedLocations.push(endLocation);
+			return searchedLocations;
+		}
 
-    for (let i=0; i<currentLocationBringsToArray.length; i++)
-    {
-      // console.log(i);
+		// console.log("currentLocationBringsToArray length: " + currentLocationBringsToArray.length);
+
+		for (let i=0; i<currentLocationBringsToArray.length; i++)
+		{
+			// console.log(i);
 			let nextLocation = currentLocationBringsToArray[i];
 
 			if (!searchedLocations.includes(nextLocation))
-      {
-        // console.log("haven't searched " + nextLocation + ", searching now");
-      	return findPath(nextLocation, endLocation, searchedLocations);
-      }
+			{
+				// console.log("haven't searched " + nextLocation + ", searching now");
+				return findPath(nextLocation, endLocation, searchedLocations);
+			}
 			else 
 				console.log("already visited " + nextLocation);
-    }
-    
+		}
+
 		console.log("currentLocation: " + currentLocation + "brings to:", currentLocationBringsToArray);
 	}
 
