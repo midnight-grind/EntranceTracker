@@ -7,6 +7,7 @@ function CSVReader()
 	const [startLocation, setStartLocation] = useState('Gohma'); // Initialize start location
 	const [endLocation, setEndLocation] = useState('Deku Tree'); // Initialize end location
 	const [locations, setLocations] = useState(new Map());
+	const [locations_objects, setLocationsObjects] = useState(new Map());
 	const [shortest_path, setShortest_path] = useState([]);
 
 	// Handle file upload
@@ -86,43 +87,85 @@ function CSVReader()
 		}
 	}
 
+	function get_doors(start_location, end_location)
+	{
+		for (let end_locations of locations_objects.get(start_location))
+		{
+
+		}
+	}
+
 	// Effect to log the updated shortest path when it's updated
 	useEffect(() => 
 	{
 		if (shortest_path.length > 0)
+		{
 			console.log("Updated shortest path:", shortest_path);
+
+			let final_route = [];
+			// for (let i=0; i<shortest_path.length-1; i++)
+			// {
+			// 	final_route.push(get_doors(shortest_path[i], shortest_path[i+1]));
+			// }
+		}
 	}, [shortest_path]);  // This effect will run whenever `shortest_path` is updated
 	
 
 	useEffect(() => 
-	{
-		// Populate the locations map from CSV data
-		for (let i=0; i < csvData.length; i++)
 		{
-			let coming_from = csvData[i]["Coming from"];
-			let brings_you_to = csvData[i]["Brings you to"];
-			let entrance_door = csvData[i]["Entrance Door"];
-			let exit_door = csvData[i]["Exit Door"];
-			let condition = csvData[i]["Condition"];
-			
-			if (csvData.length > 0 && coming_from)
-			{
-				if (!locations.has(coming_from))
-					locations.set(coming_from, []); // new location found, add to map
-
-				const childLocations = locations.get(coming_from);
-
-				if (!childLocations.includes(brings_you_to))
-					childLocations.push(brings_you_to);
-					// childLocations.push();
-				
-				locations.set(coming_from, childLocations);
-			}
-		}
-		console.log(locations);
-		setLocations(locations);
+			let newLocations = new Map(locations); // Clone the locations map to avoid direct mutation
+			let newLocationsObjects = new Map(locations_objects); // Clone the locations_objects map
 		
-	}, [csvData]);
+			// Populate the locations map from CSV data
+			for (let i = 0; i < csvData.length; i++)
+			{
+				let coming_from = csvData[i]["Coming from"];
+				let brings_you_to = csvData[i]["Brings you to"];
+				let entrance_door = csvData[i]["Entrance Door"];
+				let exit_door = csvData[i]["Exit Door"];
+				let condition = csvData[i]["Condition"];
+				
+				if (csvData.length > 0 && coming_from)
+				{
+					if (!newLocations.has(coming_from))
+					{
+						newLocations.set(coming_from, []); // new location found, add to map
+					}
+		
+					if (!newLocationsObjects.has(coming_from))
+					{
+						newLocationsObjects.set(coming_from, []); // new location object found
+					}
+		
+					const child_locations_names = newLocations.get(coming_from);
+					const child_locations_objects = newLocationsObjects.get(coming_from);
+		
+					if (!child_locations_names.includes(brings_you_to))
+					{
+						child_locations_names.push(brings_you_to);
+		
+						child_locations_objects.push({
+							"brings you to": brings_you_to,
+							"entrance door": entrance_door,
+							"exit door": exit_door,
+							"condition": condition
+						});
+					}
+		
+					// Update maps with new arrays
+					newLocations.set(coming_from, child_locations_names);
+					newLocationsObjects.set(coming_from, child_locations_objects);
+				}
+			}
+		
+			// Update the state with the modified maps
+			setLocations(newLocations);
+			setLocationsObjects(newLocationsObjects);
+		
+			console.log(newLocations);
+			console.log(newLocationsObjects);
+		}, [csvData]);
+		
 
 	return (
 		<div>
