@@ -9,6 +9,7 @@ function CSVReader()
 	const [locations, setLocations] = useState(new Map());
 	const [locations_objects, setLocationsObjects] = useState(new Map());
 	const [shortest_path, setShortest_path] = useState([]);
+	const [conditional_switches, setCondition_switches] = useState([]);
 
 	// Handle file upload
 	const handleFileUpload = (event) => 
@@ -95,6 +96,21 @@ function CSVReader()
 		}
 	}
 
+	function get_all_conditionals()
+	{
+		// console.log("get all conditions");
+		for (let value of locations_objects.values())
+		{
+			console.log(value);
+		}
+	}
+
+	function condition_met()
+	{
+
+		return true;
+	}
+
 	// Effect to log the updated shortest path when it's updated
 	useEffect(() => 
 	{
@@ -162,8 +178,9 @@ function CSVReader()
 			setLocations(newLocations);
 			setLocationsObjects(newLocationsObjects);
 		
-			console.log(newLocations);
+			// console.log(newLocations);
 			console.log(newLocationsObjects);
+			// get_all_conditionals();
 		}, [csvData]);
 		
 
