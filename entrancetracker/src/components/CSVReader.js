@@ -99,9 +99,20 @@ function CSVReader()
 	function get_all_conditionals(newLocationsObjects)
 	{
 		console.log("get all conditions");
-		for (let value of newLocationsObjects.values())
+		// for (let key in newLocationsObjects)
+		// {
+		// 	console.log(key);
+		// }
+
+		get_all_conditionals = []
+		
+		for (let [key, value] of newLocationsObjects)
 		{
-			console.log(value);
+			for (let obj of value)
+			{
+				if (obj["condition"] != "")
+					console.log(obj["condition"]);
+			}
 		}
 	}
 

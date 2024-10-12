@@ -41,8 +41,8 @@ Castle Town Bomchu Shop,Castle Town,,,,
 Outside Temple of Time,Temple of Time,,,,
 Outside Temple of Time,Castle Town,,,,
 Temple of Time,Outside Temple of Time,,,,
-Hyrule Castle Grounds,Hyrule Castle Grounds Grotto,,,,child-0+Song of Storms
-Hyrule Castle Grounds,Kakariko Village,Owl,,TRUE,child-0
+Hyrule Castle Grounds,Hyrule Castle Grounds Grotto,,,,child0 + Song_of_Storms
+Hyrule Castle Grounds,Kakariko Village,Owl,,TRUE,child0
 Hyrule Castle Grounds,Hyrule Castle Great Fairy,,,,
 Hyrule Castle Grounds,Hyrule Castle,,,,
 Hyrule Castle Grounds Grotto,Hyrule Castle Grounds,,,,
@@ -76,7 +76,7 @@ Goron City,Goron Shop,,,,
 Goron City,Death Mountain Crater,,,,
 Goron Shop,Goron City,,,,
 Zora River,Zora's Domain,,,,
-Zora River,Zora River Song of Storms Grotto,,,,Song of Storms
+Zora River,Zora River Song_of_Storms Grotto,,,,Song_of_Storms
 Zora River,Zora River Rock Grotto,,,,
 Zora River,Zora River Open Grotto,,,,
 Zora River,Lost Woods,,,,
@@ -85,8 +85,8 @@ Zora's Domain,Zora's Fountain,,,,
 Zora's Domain,Zora River,,,,
 Zora's Domain,Zora Shop,,,,
 Zora Shop,Zora's Domain,,,,
-Zora's Fountain,Jabu Jabu,,,,child-0
-Zora's Fountain,Ice Cavern,,,,adult-0
+Zora's Fountain,Jabu Jabu,,,,child0
+Zora's Fountain,Ice Cavern,,,,adult0
 Zora's Fountain,Zora's Domain,,,,
 Zora's Fountain,Zora's Fountain Great Fairy,,,,
 Jabu Jabu,Zora's Fountain,,,,
@@ -114,7 +114,7 @@ Lost Woods,Kokiri Forest,,,,
 Lost Woods,Goron City,,,,
 Lost Woods,Grotto Near Goron City,,,,
 Lost Woods,Grotto Near Sacred Forest Meadow,,,,
-Lost Woods,Sacred Forest Meadow,,,,"child-0,adult-0+Saria's Song"
+Lost Woods,Sacred Forest Meadow,,,,"child0 || (adult0 && Saria's Song)"
 Lost Woods,Zora River,,,,
 Link's House,Kokiri Forest,,,,
 Mido's House,Kokiri Forest,,,,
