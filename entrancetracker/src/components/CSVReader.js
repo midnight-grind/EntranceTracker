@@ -9,7 +9,7 @@ function CSVReader()
 	const [locations, setLocations] = useState(new Map());
 	const [locations_objects, setLocationsObjects] = useState(new Map());
 	const [shortest_path, setShortest_path] = useState([]);
-	const [conditional_switches, setCondition_switches] = useState([]);
+	const [conditions, setConditions] = useState([]);
 
 	// Handle file upload
 	const handleFileUpload = (event) => 
@@ -96,10 +96,10 @@ function CSVReader()
 		}
 	}
 
-	function get_all_conditionals()
+	function get_all_conditionals(newLocationsObjects)
 	{
-		// console.log("get all conditions");
-		for (let value of locations_objects.values())
+		console.log("get all conditions");
+		for (let value of newLocationsObjects.values())
 		{
 			console.log(value);
 		}
@@ -180,7 +180,7 @@ function CSVReader()
 		
 			// console.log(newLocations);
 			console.log(newLocationsObjects);
-			// get_all_conditionals();
+			get_all_conditionals(newLocationsObjects);
 		}, [csvData]);
 		
 
