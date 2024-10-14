@@ -112,6 +112,12 @@ function CSVReader()
 			{
 				if (obj["condition"] != "")
 					console.log(obj["condition"]);
+
+				let condition = {
+					key = 0,
+					list = [],
+					selected = "",
+				}
 			}
 		}
 	}
