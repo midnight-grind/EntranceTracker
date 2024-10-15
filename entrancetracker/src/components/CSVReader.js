@@ -104,7 +104,7 @@ function CSVReader()
 		// 	console.log(key);
 		// }
 
-		get_all_conditionals = []
+		let all_conditionals = []
 		
 		for (let [key, value] of newLocationsObjects)
 		{
@@ -113,11 +113,11 @@ function CSVReader()
 				if (obj["condition"] != "")
 					console.log(obj["condition"]);
 
-				let condition = {
-					key = 0,
-					list = [],
-					selected = "",
-				}
+				// let condition = {
+				// 	key : 0,
+				// 	list : [],
+				// 	selected : ""
+				// }
 			}
 		}
 	}
