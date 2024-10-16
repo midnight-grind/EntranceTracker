@@ -42,7 +42,7 @@ Castle Town Bomchu Shop,Castle Town,,,,
 Outside Temple of Time,Temple of Time,,,,
 Outside Temple of Time,Castle Town,,,,
 Temple of Time,Outside Temple of Time,,,,
-Hyrule Castle Grounds,Hyrule Castle Grounds Grotto,,,,child-0 && Song_of_Storms
+Hyrule Castle Grounds,Hyrule Castle Grounds Grotto,,,,(child-0 && Song_of_Storms)
 Hyrule Castle Grounds,Kakariko Village,Owl,,TRUE,child-0
 Hyrule Castle Grounds,Hyrule Castle Great Fairy,,,,
 Hyrule Castle Grounds,Hyrule Castle,,,,
@@ -115,7 +115,7 @@ Lost Woods,Kokiri Forest,,,,
 Lost Woods,Goron City,,,,
 Lost Woods,Grotto Near Goron City,,,,
 Lost Woods,Grotto Near Sacred Forest Meadow,,,,
-Lost Woods,Sacred Forest Meadow,,,,"child-0,adult-0 && Saria's_Song"
+Lost Woods,Sacred Forest Meadow,,,,"child-0 || (adult-0 && Saria's_Song)"
 Lost Woods,Zora River,,,,
 Link's House,Kokiri Forest,,,,
 Mido's House,Kokiri Forest,,,,

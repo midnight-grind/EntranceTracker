@@ -111,7 +111,11 @@ function CSVReader()
 			for (let obj of value)
 			{
 				if (obj["condition"] != "")
-					console.log(obj["condition"]);
+				{
+					let conditions_separated = obj["condition"].replace("(", " ").replace(")", " ").replace("&&", " ").replace("||", " ");
+					conditions_separated = conditions_separated.replace(/\s+/g, ' ');
+					console.log(conditions_separated);
+				}
 
 				// let condition = {
 				// 	key : 0,
