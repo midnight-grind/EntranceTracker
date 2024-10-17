@@ -114,7 +114,27 @@ function CSVReader()
 				{
 					let conditions_separated = obj["condition"].replace("(", " ").replace(")", " ").replace("&&", " ").replace("||", " ");
 					conditions_separated = conditions_separated.replace(/\s+/g, ' ');
-					console.log(conditions_separated);
+					// console.log(conditions_separated);
+
+					for (let condition_separated of conditions_separated.split(" "))
+					{
+						if (condition_separated != " " &&  condition_separated != "")
+						{
+							if (all_conditionals.length == 0)
+							{
+								
+							}
+
+							for (let conditional of all_conditionals)
+							{
+								if (conditional["conditions"].includes(condition_separated))
+								{
+
+								}
+							}
+						}
+							console.log(condition_separated);
+					}
 				}
 
 				// let condition = {
