@@ -111,7 +111,7 @@ function CSVReader()
 				{
 					let conditions_separated = obj["condition"].replace("(", " ").replace(")", " ").replace("&&", " ").replace("||", " ");
 					conditions_separated = conditions_separated.replace(/\s+/g, ' ');
-					// console.log(conditions_separated);
+					console.log(conditions_separated);
 
 					for (let condition_separated of conditions_separated.split(" "))
 					{
@@ -124,26 +124,73 @@ function CSVReader()
 			}
 		}
 
-		console.log(all_conditionals);
+		// console.log(all_conditionals);
 		for (let [key, value] of Object.entries(all_conditionals))
 		{
-			console.log(key, value);
+			console.log(key);
 
-			if ( isNaN(value[value.length - 1]) && all_conditionals_with_arrays.hasOwnProperty(value[value.length - 1]) ) // condition set not already set
+			// key looks like: Song_of_Storms, child-0
+
+
+			let last_index = key.length - 1;
+			let last_char = key[last_index];
+
+			// console.log("key : " + key + " last index: " + last_index + " last char: " + last_char);
+
+			// conditional belongs to an array, last character is a number
+			if (!isNaN(last_char))
 			{
-				all_conditionals_with_arrays[value[value.length - 1]] 
-			}
-
-			let conditional_final = {
-				condition_list : [],
-				active_condition : ""
+				// console.log("last character of " + key + " is numerical: " + last_char);
+				if (!all_conditionals_with_arrays.hasOwnProperty(last_char)) // condition set not already set
+				{
+					all_conditionals_with_arrays[last_char] = {
+						condition_list : [key],
+						active_condition : key
+					};
+				}
+				else
+				{
+					all_conditionals_with_arrays[last_char].condition_list.push(key);
+				}
 			}
 		}
+
+		for (let [key, value] of Object.entries(all_conditionals))
+		{
+			console.log(key);
+
+			// key looks like: Song_of_Storms, child-0
+
+
+			let last_index = key.length - 1;
+			let last_char = key[last_index];
+
+			// console.log("key : " + key + " last index: " + last_index + " last char: " + last_char);
+
+			// conditional belongs to an array, last character is a number
+			if (isNaN(last_char))
+			{
+				let max = -1;
+
+				for (let [key, value] of Object.entries(all_conditionals_with_arrays))
+				{
+					if (Number(key) > max)
+						max = Number(key);  // Make sure to compare numerical values
+				}
+
+				all_conditionals_with_arrays[max + 1] = {
+					condition_list : [key],
+					active_condition : key
+				};
+			}
+		}
+
+		// console.log("all_conditionals: " + all_conditionals_with_arrays);
+		console.log("Formatted all_conditionals_with_arrays:", JSON.stringify(all_conditionals_with_arrays, null, 2));
 	}
 
 	function condition_met()
 	{
-
 		return true;
 	}
 
