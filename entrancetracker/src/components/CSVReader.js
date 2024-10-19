@@ -187,6 +187,8 @@ function CSVReader()
 
 		// console.log("all_conditionals: " + all_conditionals_with_arrays);
 		console.log("Formatted all_conditionals_with_arrays:", JSON.stringify(all_conditionals_with_arrays, null, 2));
+
+		return all_conditionals_with_arrays;
 	}
 
 	function condition_met()
@@ -209,62 +211,66 @@ function CSVReader()
 		}
 	}, [shortest_path]);  // This effect will run whenever `shortest_path` is updated
 	
+	function testHtml()
+	{
+		return <div>This is rendered from testHtml function!</div>;
+	}
 
 	useEffect(() => 
+	{
+		let newLocations = new Map(locations); // Clone the locations map to avoid direct mutation
+		let newLocationsObjects = new Map(locations_objects); // Clone the locations_objects map
+	
+		// Populate the locations map from CSV data
+		for (let i = 0; i < csvData.length; i++)
 		{
-			let newLocations = new Map(locations); // Clone the locations map to avoid direct mutation
-			let newLocationsObjects = new Map(locations_objects); // Clone the locations_objects map
-		
-			// Populate the locations map from CSV data
-			for (let i = 0; i < csvData.length; i++)
+			let coming_from = csvData[i]["Coming from"];
+			let brings_you_to = csvData[i]["Brings you to"];
+			let entrance_door = csvData[i]["Entrance Door"];
+			let exit_door = csvData[i]["Exit Door"];
+			let condition = csvData[i]["Condition"];
+			
+			if (csvData.length > 0 && coming_from)
 			{
-				let coming_from = csvData[i]["Coming from"];
-				let brings_you_to = csvData[i]["Brings you to"];
-				let entrance_door = csvData[i]["Entrance Door"];
-				let exit_door = csvData[i]["Exit Door"];
-				let condition = csvData[i]["Condition"];
-				
-				if (csvData.length > 0 && coming_from)
+				if (!newLocations.has(coming_from))
 				{
-					if (!newLocations.has(coming_from))
-					{
-						newLocations.set(coming_from, []); // new location found, add to map
-					}
-		
-					if (!newLocationsObjects.has(coming_from))
-					{
-						newLocationsObjects.set(coming_from, []); // new location object found
-					}
-		
-					const child_locations_names = newLocations.get(coming_from);
-					const child_locations_objects = newLocationsObjects.get(coming_from);
-		
-					if (!child_locations_names.includes(brings_you_to))
-					{
-						child_locations_names.push(brings_you_to);
-		
-						child_locations_objects.push({
-							"brings you to": brings_you_to,
-							"entrance door": entrance_door,
-							"exit door": exit_door,
-							"condition": condition
-						});
-					}
-		
-					// Update maps with new arrays
-					newLocations.set(coming_from, child_locations_names);
-					newLocationsObjects.set(coming_from, child_locations_objects);
+					newLocations.set(coming_from, []); // new location found, add to map
 				}
+	
+				if (!newLocationsObjects.has(coming_from))
+				{
+					newLocationsObjects.set(coming_from, []); // new location object found
+				}
+	
+				const child_locations_names = newLocations.get(coming_from);
+				const child_locations_objects = newLocationsObjects.get(coming_from);
+	
+				if (!child_locations_names.includes(brings_you_to))
+				{
+					child_locations_names.push(brings_you_to);
+	
+					child_locations_objects.push({
+						"brings you to": brings_you_to,
+						"entrance door": entrance_door,
+						"exit door": exit_door,
+						"condition": condition
+					});
+				}
+	
+				// Update maps with new arrays
+				newLocations.set(coming_from, child_locations_names);
+				newLocationsObjects.set(coming_from, child_locations_objects);
 			}
-		
-			// Update the state with the modified maps
-			setLocations(newLocations);
-			setLocationsObjects(newLocationsObjects);
-		
-			// console.log(newLocations);
-			console.log(newLocationsObjects);
-			get_all_conditionals(newLocationsObjects);
-		}, [csvData]);
+		}
+	
+		// Update the state with the modified maps
+		setLocations(newLocations);
+		setLocationsObjects(newLocationsObjects);
+	
+		// console.log(newLocations);
+		console.log(newLocationsObjects);
+		get_all_conditionals(newLocationsObjects);
+	}, [csvData]);
 		
 
 	return (
@@ -291,6 +297,7 @@ function CSVReader()
 
 			<br/>
 			{shortest_path}
+			{testHtml()}
 		</div>
 	);
 }
