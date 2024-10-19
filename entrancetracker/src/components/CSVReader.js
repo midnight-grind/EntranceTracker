@@ -99,12 +99,9 @@ function CSVReader()
 	function get_all_conditionals(newLocationsObjects)
 	{
 		console.log("get all conditions");
-		// for (let key in newLocationsObjects)
-		// {
-		// 	console.log(key);
-		// }
 
-		let all_conditionals = []
+		let all_conditionals = {};
+		let all_conditionals_with_arrays = {};
 		
 		for (let [key, value] of newLocationsObjects)
 		{
@@ -118,30 +115,28 @@ function CSVReader()
 
 					for (let condition_separated of conditions_separated.split(" "))
 					{
-						if (condition_separated != " " &&  condition_separated != "")
+						if (condition_separated != " " && condition_separated != "")
 						{
-							if (all_conditionals.length == 0)
-							{
-								
-							}
-
-							for (let conditional of all_conditionals)
-							{
-								if (conditional["conditions"].includes(condition_separated))
-								{
-
-								}
-							}
+							all_conditionals[condition_separated] = "";
 						}
-							console.log(condition_separated);
 					}
 				}
+			}
+		}
 
-				// let condition = {
-				// 	key : 0,
-				// 	list : [],
-				// 	selected : ""
-				// }
+		console.log(all_conditionals);
+		for (let [key, value] of Object.entries(all_conditionals))
+		{
+			console.log(key, value);
+
+			if ( isNaN(value[value.length - 1]) && all_conditionals_with_arrays.hasOwnProperty(value[value.length - 1]) ) // condition set not already set
+			{
+				all_conditionals_with_arrays[value[value.length - 1]] 
+			}
+
+			let conditional_final = {
+				condition_list : [],
+				active_condition : ""
 			}
 		}
 	}
