@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
+import Switch from '@mui/material/Switch';
+
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 function CSVReader() 
 {
@@ -10,6 +17,7 @@ function CSVReader()
 	const [locations_objects, setLocationsObjects] = useState(new Map());
 	const [shortest_path, setShortest_path] = useState([]);
 	const [conditions, setConditions] = useState([]);
+	const [final_conditions, setFinalConditions] = useState({});
 
 	// Handle file upload
 	const handleFileUpload = (event) => 
@@ -188,12 +196,74 @@ function CSVReader()
 		// console.log("all_conditionals: " + all_conditionals_with_arrays);
 		console.log("Formatted all_conditionals_with_arrays:", JSON.stringify(all_conditionals_with_arrays, null, 2));
 
+		setFinalConditions(all_conditionals_with_arrays);
+
 		return all_conditionals_with_arrays;
+	}
+
+	function display_conditions()
+	{
+		let ret = [];
+		let key_index = 1;
+
+		for (let [key, value] of Object.entries(final_conditions))
+		{
+			let checked = true;
+			if (value["condition_list"].length === 1)
+			{
+				ret.push(
+				  <div key={key}>
+					{key}&nbsp;
+					{value["condition_list"][0] + ": "}
+					<Switch checked={checked}/>
+					<br />
+				  </div>
+				);
+
+				key_index ++;
+			}
+			else if (value["condition_list"].length === 2)
+			{
+				ret.push(
+				  <div key={key}>
+					{key}&nbsp;
+					{value["condition_list"][0].split("-" + key)[0] + " "}
+					<Switch checked={checked}/>
+					{value["condition_list"][1].split("-" + key)[0] + " "}
+					<br />
+				  </div>
+				);
+
+				key_index ++;
+			}
+			else if (value["condition_list"].length > 2)
+			{
+				ret.push
+				(
+				  <RadioGroup key={key} name="simple-radio-group" style={{ border: '2px solid black' }}>
+					{key}&nbsp;
+					{value["condition_list"].map((condition) => (
+					  <FormControlLabel key={condition} value={condition} control={<Radio />} label={condition} />
+					))}
+				  </RadioGroup>
+				);
+				key_index++;
+			}
+			// ret += <Switch checked='true' onChange={handleSwitchChange(index)} inputProps={{ 'aria-label': 'controlled' }}/>;
+		}
+
+		// final_conditions
+		return ret;
 	}
 
 	function condition_met()
 	{
 		return true;
+	}
+
+	function testHtml()
+	{
+		return <div>This is rendered from testHtml function!</div>;
 	}
 
 	// Effect to log the updated shortest path when it's updated
@@ -211,10 +281,6 @@ function CSVReader()
 		}
 	}, [shortest_path]);  // This effect will run whenever `shortest_path` is updated
 	
-	function testHtml()
-	{
-		return <div>This is rendered from testHtml function!</div>;
-	}
 
 	useEffect(() => 
 	{
@@ -297,7 +363,9 @@ function CSVReader()
 
 			<br/>
 			{shortest_path}
-			{testHtml()}
+			{/* {testHtml()} */}
+			{/* {JSON.stringify(final_conditions)} */}
+			{display_conditions()}
 		</div>
 	);
 }

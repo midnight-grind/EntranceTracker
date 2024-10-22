@@ -17,7 +17,6 @@
   color: #61dafb;
 }
 
-
 .container {
   display: flex;
   justify-content: center;  /* Center horizontally */
@@ -38,8 +37,12 @@
   gap: 10px;               /* Space between the boxes */
 }
 
+/* Reset margins and padding for full-page layout */
 body, html {
-  background-color: rosybrown; /* Ensure the whole page has the same background */
-  margin: 0; /* Remove margins to avoid any space around */
-  height: 100%; /* Ensure full page height */
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Prevents any scrollbars */
+  background-color: transparent; /* To match the background with the canvas */
 }
