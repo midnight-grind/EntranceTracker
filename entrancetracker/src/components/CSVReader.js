@@ -201,6 +201,11 @@ function CSVReader()
 		return all_conditionals_with_arrays;
 	}
 
+	function switch_pressed()
+	{
+		
+	}
+
 	function display_conditions()
 	{
 		let ret = [];
