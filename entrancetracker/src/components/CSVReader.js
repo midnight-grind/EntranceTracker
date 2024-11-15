@@ -8,6 +8,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
+
+import UploadIcon from '@mui/icons-material/Upload'; // If using Material-UI icons
+
 function CSVReader() 
 {
 	const [csvData, setCsvData] = useState([]);
@@ -18,10 +21,22 @@ function CSVReader()
 	const [shortest_path, setShortest_path] = useState([]);
 	const [conditions, setConditions] = useState([]);
 	const [final_conditions, setFinalConditions] = useState({});
+	const [shortestPathButtonVisible, setShortestPathButtonVisible] = useState(false);
 
 	// Handle file upload
 	const handleFileUpload = (event) => 
 	{
+		setCsvData([]);
+		setStartLocation('Gohma');
+		setEndLocation('Deku Tree');
+		setLocations(new Map());
+		setLocationsObjects(new Map());
+		setShortest_path([]);
+		setConditions([]);
+		setFinalConditions({});
+		setShortestPathButtonVisible(false);
+
+
 		const file = event.target.files[0];
 		if (file) 
 		{
@@ -57,13 +72,24 @@ function CSVReader()
 			all_paths_final.push(final_path);
 		}
 
-		let shortest = null;  // Declare a local variable to hold the shortest path
+		console.log("all_paths_final: " + all_paths_final);
 
+		let shortest = null;  // Declare a local variable to hold the shortest path
 		for (let path of all_paths_final)
 		{
 			if (shortest === null || path.length < shortest.length)
 			{
-				shortest = path;  // Update the local shortest variable
+				shortest = "";
+				for (let i=0; i<path.length; i++)
+				{
+					shortest += path[i];
+					if (i != path.length-1)
+						shortest += " -> ";
+
+					console.log("path location: " + path[i]);
+				}
+
+				// shortest = path;  // Update the local shortest variable
 			}
 			console.log(path);  // This logs all paths
 		}
@@ -96,6 +122,19 @@ function CSVReader()
 		}
 	}
 
+	function isValidPath(path)
+	{
+		let condition_list = [];
+
+		// needs to meet all specified conditions
+		for (let i=0; i<path.length-1; i++)
+		{
+
+			console.log("path location: " + path[i]);
+		}
+
+	}
+
 	function get_doors(start_location, end_location)
 	{
 		for (let end_locations of locations_objects.get(start_location))
@@ -117,8 +156,8 @@ function CSVReader()
 			{
 				if (obj["condition"] != "")
 				{
-					let conditions_separated = obj["condition"].replace("(", " ").replace(")", " ").replace("&&", " ").replace("||", " ");
-					conditions_separated = conditions_separated.replace(/\s+/g, ' ');
+					let conditions_separated = obj["condition"].replaceAll("(", " ").replaceAll(")", " ").replaceAll("&&", " ").replaceAll("||", " ");
+					conditions_separated = conditions_separated.replaceAll(/\s+/g, ' ');
 					console.log(conditions_separated);
 
 					for (let condition_separated of conditions_separated.split(" "))
@@ -153,7 +192,8 @@ function CSVReader()
 				{
 					all_conditionals_with_arrays[last_char] = {
 						condition_list : [key],
-						active_condition : key
+						active_condition : "none",
+						checked : false
 					};
 				}
 				else
@@ -175,7 +215,7 @@ function CSVReader()
 
 			// console.log("key : " + key + " last index: " + last_index + " last char: " + last_char);
 
-			// conditional belongs to an array, last character is a number
+			// only one conditional on its own
 			if (isNaN(last_char))
 			{
 				let max = -1;
@@ -188,7 +228,8 @@ function CSVReader()
 
 				all_conditionals_with_arrays[max + 1] = {
 					condition_list : [key],
-					active_condition : key
+					active_condition : "none", // TODO this should start off as false
+					checked : false
 				};
 			}
 		}
@@ -196,14 +237,95 @@ function CSVReader()
 		// console.log("all_conditionals: " + all_conditionals_with_arrays);
 		console.log("Formatted all_conditionals_with_arrays:", JSON.stringify(all_conditionals_with_arrays, null, 2));
 
+		// only two options, default to first option, if more than two: keep it "none" until condition is selected
+		for (let [key, value] of Object.entries(all_conditionals_with_arrays))
+		{
+			if (all_conditionals_with_arrays[key]["condition_list"].length == 2)
+			{
+				console.log("2 elements, key: " + key);
+				all_conditionals_with_arrays[key]["active_condition"] = all_conditionals_with_arrays[key]["condition_list"][0];
+			}
+		}
+
+
 		setFinalConditions(all_conditionals_with_arrays);
 
 		return all_conditionals_with_arrays;
 	}
 
-	function switch_pressed()
+	function switch_pressed(key)
 	{
+		console.log("switch pressed", final_conditions[key]);
+
+		// Create a shallow copy of final_conditions
+		const updatedConditions = { ...final_conditions };
+
+		// Toggle the checked state
+		updatedConditions[key]["checked"] = !updatedConditions[key]["checked"];
+
+		// one condition
+		if (updatedConditions[key]["condition_list"].length == 1)
+		{
+			console.log("updatedConditions[key][\"condition_list\"][0] : " + updatedConditions[key]["condition_list"][0]);
+			console.log("updatedConditions[key][\"active_condition\"] : " + updatedConditions[key]["active_condition"]);
+
+			if (updatedConditions[key]["active_condition"] === "none")
+			{
+				updatedConditions[key]["active_condition"] = updatedConditions[key]["condition_list"][0];
+			}
+			else
+			{
+				updatedConditions[key]["active_condition"] = "none";
+			}
+
+			console.log("condition list only 1, active condition: ", updatedConditions[key]["active_condition"]);
+		}
 		
+		// two conditions
+		else if (updatedConditions[key]["condition_list"].length == 2)
+		{
+			if (updatedConditions[key]["active_condition"] === updatedConditions[key]["condition_list"][0])
+			{
+				updatedConditions[key]["active_condition"] = updatedConditions[key]["condition_list"][1];
+			}
+			else if (updatedConditions[key]["active_condition"] === updatedConditions[key]["condition_list"][1])
+			{
+				updatedConditions[key]["active_condition"] = updatedConditions[key]["condition_list"][0];
+			}
+			else if (updatedConditions[key]["active_condition"] === "none")
+			{
+				updatedConditions[key]["active_condition"] = updatedConditions[key]["condition_list"][0];
+			}
+
+			console.log("condition list 2, active condition: ", updatedConditions[key]["active_condition"]);
+		}
+
+		// more than two conditions
+		else if (updatedConditions[key]["condition_list"].length > 2)
+			console.log("condition list greater than 2");
+		
+		// Update the state to trigger a re-render
+		setFinalConditions(updatedConditions);
+	}
+
+	function isChecked(key)
+	{
+		// console.log("checked: " + final_conditions[key]["checked"]);
+		return final_conditions[key]["checked"];
+	}
+
+	function selectMultiCondition(key, condition)
+	{
+		// Create a shallow copy of final_conditions
+		const updatedConditions = { ...final_conditions };
+		
+		// Toggle the checked state
+		updatedConditions[key]["active_condition"] = condition;
+		
+		// Update the state to trigger a re-render
+		setFinalConditions(updatedConditions);
+
+		console.log("select multi condition key: " + key + ", condition: " + condition);
 	}
 
 	function display_conditions()
@@ -214,43 +336,48 @@ function CSVReader()
 		for (let [key, value] of Object.entries(final_conditions))
 		{
 			let checked = true;
-			if (value["condition_list"].length === 1)
+			if (value["condition_list"].length === 1) // single condition, true or false
 			{
 				ret.push(
-				  <div key={key}>
-					{key}&nbsp;
-					{value["condition_list"][0] + ": "}
-					<Switch checked={checked}/>
-					<br />
+				  <div key={key} style={{ textAlign: 'left', fontSize: '16px' }}>
+					{/* {key}&nbsp; */}
+					{value["condition_list"][0].replaceAll("_", " ") + ": "}
+					<Switch checked={isChecked(key)} onChange={() => switch_pressed(key)}/>
+					<hr style={{ width: '50%', marginLeft: '0' }}/>
 				  </div>
 				);
 
 				key_index ++;
 			}
-			else if (value["condition_list"].length === 2)
+			else if (value["condition_list"].length === 2) // two conditions, one or the other
 			{
 				ret.push(
 				  <div key={key}>
-					{key}&nbsp;
-					{value["condition_list"][0].split("-" + key)[0] + " "}
-					<Switch checked={checked}/>
-					{value["condition_list"][1].split("-" + key)[0] + " "}
-					<br />
+					{/* {key}&nbsp; */}
+					<div style={{ textAlign: 'left', fontSize: '16px' }}>
+						{value["condition_list"][0].split("-" + key)[0].replaceAll("_", " ") + " "}
+						<Switch checked={value["checked"]} onChange={() => switch_pressed(key)}/>
+						{value["condition_list"][1].split("-" + key)[0].replaceAll("_", " ") + " "}
+					</div>
+					<hr style={{ width: '50%', marginLeft: '0' }}/>
 				  </div>
 				);
 
 				key_index ++;
 			}
-			else if (value["condition_list"].length > 2)
+			else if (value["condition_list"].length > 2) // three or more conditions, choose one of them
 			{
 				ret.push
 				(
-				  <RadioGroup key={key} name="simple-radio-group" style={{ border: '2px solid black' }}>
-					{key}&nbsp;
-					{value["condition_list"].map((condition) => (
-					  <FormControlLabel key={condition} value={condition} control={<Radio />} label={condition} />
-					))}
-				  </RadioGroup>
+					<div>
+						<RadioGroup key={key} name="simple-radio-group" style={{ textAlign: 'left', fontSize: '16px' }}>
+							{/* {key}&nbsp; */}
+							{value["condition_list"].map((condition) => (
+							<FormControlLabel key={condition} value={condition} onChange={() => selectMultiCondition(key, condition)} control={<Radio />} label={condition.split("-" + key)[0].replaceAll("_", " ")} />
+							))}
+						</RadioGroup>
+						<hr style={{ width: '50%', marginLeft: '0' }}/>
+					</div>
 				);
 				key_index++;
 			}
@@ -342,35 +469,85 @@ function CSVReader()
 		console.log(newLocationsObjects);
 		get_all_conditionals(newLocationsObjects);
 	}, [csvData]);
-		
+	
+	
+
+	function updateShortestPathButton()
+	{
+		if (startLocation != "" && endLocation != "")
+		{
+			setShortestPathButtonVisible(true);
+		}
+	}
+
+
+	
+	const fileInputRef = React.useRef();
+
+	const handleIconClick = () => {
+	  fileInputRef.current.click(); // Triggers the hidden file input
+	};
 
 	return (
 		<div>
-			{/* Input for uploading CSV */}
-			<input type="file" accept=".csv" onChange={handleFileUpload} />
+			<div>
+				{/* Input for uploading CSV */}
 
-			<br/>
-			Start Location &nbsp;
-			<input 
-				type="text" 
-				value={startLocation} 
-				onChange={(e) => setStartLocation(e.target.value)} 
-			/>
-			<br/>
-			End Location &nbsp;
-			<input 
-				type="text" 
-				value={endLocation} 
-				onChange={(e) => setEndLocation(e.target.value)} 
-			/>
-			<br/>
-			<button onClick={handleClick}> Test </button>
+				<input
+					type="file"
+					accept=".csv"
+					onChange={(event) => {
+						handleFileUpload(event);
+						updateShortestPathButton(event);
+					}}
+					ref={fileInputRef}
+					style={{ display: 'none' }}
+				/>
+				
+				<div style={{ textAlign: 'left'}}>
+					Upload Entrance Template File<br></br>
+					<button onClick={handleIconClick} style={{ border: 'none', background: 'none', cursor: 'pointer' }}>
+						<UploadIcon style={{ fontSize: '24px', color: '#000' }} /> {/* Customize size and color */}
+					</button>
+				</div>
 
-			<br/>
-			{shortest_path}
-			{/* {testHtml()} */}
-			{/* {JSON.stringify(final_conditions)} */}
-			{display_conditions()}
+
+
+
+				<div style={{ textAlign: 'left'}}>
+					<br/>
+					Start Location &nbsp;
+					<input 
+						type="text" 
+						value={startLocation} 
+						onChange={(e) => setStartLocation(e.target.value)} 
+					/>
+					<br/>
+					End Location &nbsp;
+					<input 
+						type="text" 
+						value={endLocation} 
+						onChange={(e) => setEndLocation(e.target.value)} 
+					/>
+					<br/>
+					<div>
+						{shortestPathButtonVisible && (
+						<button onClick={handleClick}>Find Shortest Path</button>
+						)}
+					</div>
+				</div>
+
+				<br/><br/>
+				{/* <input type="file" accept=".csv" onChange={handleFileUpload} /> */}
+				<br/><br/>
+				{/* {testHtml()} */}
+				{/* {JSON.stringify(final_conditions)} */}
+				{display_conditions()}
+				<br></br>
+			</div>
+			<div>
+				{shortest_path}
+			</div>
 		</div>
 	);
 }

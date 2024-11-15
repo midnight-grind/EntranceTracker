@@ -1,11 +1,11 @@
 Coming from,Brings you to,Entrance Door,Exit Door,One Way,Condition
 Lake Hylia,Kakariko Village,Owl,,TRUE,child-0
-Lake Hylia,Lake House Lab,,,,
-Lake Hylia,Fishing Hole,,,,
-Lake House Lab,Lake Hylia,,,,
-Fishing Hole,Lake Hylia,,,,
-Water Temple,Lake Hylia,,,,
-Water Temple,Morpha,,,,
+Lake Hylia,Lake House Lab,To Lake House Lab,From Lake Hylia,,
+Lake Hylia,Fishing Hole,To Fishing Hole,From Lake Hylia,,
+Lake House Lab,Lake Hylia,To Lake Hylia,From Lake House Lab,,
+Fishing Hole,Lake Hylia,To Lake Hylia,From Fishing Hole,,
+Water Temple,Lake Hylia,To Lake Hylia,From Water Temple,,
+Water Temple,Morpha,To Morpha,From Water Temple,,
 Morpha (Water Temple Boss),Water Temple,,,,
 Gerudo Valley,Lake Hylia,,,TRUE,
 Gerudo Valley,Gerudo Fortress,,,,
@@ -89,7 +89,7 @@ Zora Shop,Zora's Domain,,,,
 Zora's Fountain,Jabu Jabu,,,,child-0
 Zora's Fountain,Ice Cavern,,,,adult-0
 Zora's Fountain,Zora's Domain,,,,
-Zora's Fountain,Zora's Fountain Great Fairy,,,,test-1
+Zora's Fountain,Zora's Fountain Great Fairy,,,,Din's_Fire-1
 Jabu Jabu,Zora's Fountain,,,,adult-1
 Jabu Jabu,Barinade,,,,nocturne_of_shadow-1
 Barinade,Jabu Jabu,,,,
@@ -105,10 +105,11 @@ Kokiri Forest,Lost Woods,,,,
 Kokiri Forest,Link's House,,,,
 Kokiri Forest,Saria's House,,,,
 Kokiri Forest,Mido's House,,,,
-Kokiri Forest,Know-it-all House,,,,
+Kokiri Forest,Know-it-all House,To Know-it-all House,From Kokiri Forest,,
 Kokiri Forest,Kokiri Forest Shop,,,,
 Kokiri Forest,Deku Tree,,,,
 Kokiri Forest,House of Twins,,,,
+Kokiri Forest,Hyrule Field,,,,Kokiri_Emerald
 Lost Woods Bridge,Hyrule Field,,,,
 Lost Woods Bridge,Kokiri Forest,,,,
 Lost Woods,Kokiri Forest,,,,

@@ -13,7 +13,7 @@ function App() {
           <CSVReader />
         </div>
       </header>
-      <SwirlCanvas />
+      {/* <SwirlCanvas /> */}
     </div>
   );
 }

@@ -3,7 +3,7 @@
 }
 
 .App-header {
-  /* background-color: #282c34; */
+  background: linear-gradient(135deg, #6a994e, #d9534f); /* Jewel tones: emerald green to ruby red */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -14,7 +14,7 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: #ffd700; /* Optional: gold color for links to enhance the jewel tone */
 }
 
 .container {
