@@ -7,9 +7,11 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import Button from '@mui/material/Button';
 
 
 import UploadIcon from '@mui/icons-material/Upload'; // If using Material-UI icons
+import ComingFromBringsYouTo from './ComingFromBringsYouTo';
 
 function CSVReader() 
 {
@@ -480,6 +482,19 @@ function CSVReader()
 		}
 	}
 
+	function reset()
+	{
+		setCsvData([]);
+		setStartLocation('Gohma');
+		setEndLocation('Deku Tree');
+		setLocations(new Map());
+		setLocationsObjects(new Map());
+		setShortest_path([]);
+		setConditions([]);
+		setFinalConditions({});
+		setShortestPathButtonVisible(false);	
+	}
+
 
 	
 	const fileInputRef = React.useRef();
@@ -489,8 +504,8 @@ function CSVReader()
 	};
 
 	return (
-		<div>
-			<div>
+		<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+			<div style={{ flex: '1', marginRight: '20px' }}>
 				{/* Input for uploading CSV */}
 
 				<input
@@ -504,6 +519,11 @@ function CSVReader()
 					style={{ display: 'none' }}
 				/>
 				
+				<div style={{ textAlign: 'left'}}>
+					<Button variant="outlined" sx={{ color: 'red', borderColor: 'red' }} onClick={reset}>Reset</Button>
+				</div>
+
+
 				<div style={{ textAlign: 'left'}}>
 					Upload Entrance Template File<br></br>
 					<button onClick={handleIconClick} style={{ border: 'none', background: 'none', cursor: 'pointer' }}>
@@ -532,22 +552,36 @@ function CSVReader()
 					<br/>
 					<div>
 						{shortestPathButtonVisible && (
-						<button onClick={handleClick}>Find Shortest Path</button>
+							<button onClick={handleClick}>Find Shortest Path</button>
 						)}
 					</div>
 				</div>
 
-				<br/><br/>
-				{/* <input type="file" accept=".csv" onChange={handleFileUpload} /> */}
-				<br/><br/>
-				{/* {testHtml()} */}
-				{/* {JSON.stringify(final_conditions)} */}
-				{display_conditions()}
-				<br></br>
+				<div>
+					{/* {JSON.stringify(final_conditions)} */}
+					<h4 style={{ textAlign: 'left' }}>Game State</h4>
+					<div style={{ fontSize: '14px', marginTop: '-40px', marginBottom: '50px' }}>
+						<em>Used for determining what conditions need to pass for a path to be available</em>
+					</div>
+				</div>
+				
+				<div style={{ overflow: 'auto', maxHeight: '800px' }}>
+					{display_conditions()}
+				</div><br></br>
+
+
 			</div>
-			<div>
+
+
+
+			<div style={{ flex: '0 0 auto', textAlign: 'right', marginLeft: '50px'}}>
+				<ComingFromBringsYouTo locations={['1','e']}></ComingFromBringsYouTo><br></br>
+
 				{shortest_path}
 			</div>
+
+
+
 		</div>
 	);
 }
