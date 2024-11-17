@@ -8,10 +8,15 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
 
 
 import UploadIcon from '@mui/icons-material/Upload'; // If using Material-UI icons
 import ComingFromBringsYouTo from './ComingFromBringsYouTo';
+import InfoIcon from '@mui/icons-material/Info';
+import UnexploredCheckmarks from './UnexploredCheckmarks';
 
 function CSVReader() 
 {
@@ -395,11 +400,6 @@ function CSVReader()
 		return true;
 	}
 
-	function testHtml()
-	{
-		return <div>This is rendered from testHtml function!</div>;
-	}
-
 	// Effect to log the updated shortest path when it's updated
 	useEffect(() => 
 	{
@@ -525,7 +525,7 @@ function CSVReader()
 
 
 				<div style={{ textAlign: 'left'}}>
-					Upload Entrance Template File<br></br>
+					<div style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Upload Entrance Template File</div><br></br>
 					<button onClick={handleIconClick} style={{ border: 'none', background: 'none', cursor: 'pointer' }}>
 						<UploadIcon style={{ fontSize: '24px', color: '#000' }} /> {/* Customize size and color */}
 					</button>
@@ -536,14 +536,14 @@ function CSVReader()
 
 				<div style={{ textAlign: 'left'}}>
 					<br/>
-					Start Location &nbsp;
+					<div style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Start Location</div> &nbsp;
 					<input 
 						type="text" 
 						value={startLocation} 
 						onChange={(e) => setStartLocation(e.target.value)} 
 					/>
 					<br/>
-					End Location &nbsp;
+					<div style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}> End Location </div> &nbsp;
 					<input 
 						type="text" 
 						value={endLocation} 
@@ -559,25 +559,62 @@ function CSVReader()
 
 				<div>
 					{/* {JSON.stringify(final_conditions)} */}
-					<h4 style={{ textAlign: 'left' }}>Game State</h4>
+					<h4 style={{ textAlign: 'left', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'}}>Game State</h4>
 					<div style={{ fontSize: '14px', marginTop: '-40px', marginBottom: '50px' }}>
-						<em>Used for determining what conditions need to pass for a path to be available</em>
+						<em>Determines what conditions need to pass for an entrance door to be unlocked</em>&nbsp;&nbsp;&nbsp;
+						
+						<Tooltip title="If a player randomly exits through a door and can immediately re-enter it, entry conditions may no longer apply,
+						as a valid path has been found.">
+							<InfoIcon
+								style={{
+									fontSize: '30px', // Adjust the size of the icon
+									color: '#8B0000',    // Change the color of the icon
+								}}
+							/>
+						</Tooltip>
+
 					</div>
 				</div>
 				
 				<div style={{ overflow: 'auto', maxHeight: '800px' }}>
 					{display_conditions()}
 				</div><br></br>
-
+				
 
 			</div>
 
+			<div style={{ width: '2px', height: '100vh', backgroundColor: 'white', marginLeft: '30px', boxShadow: '4px 0px 10px rgba(0, 0, 0, 0.7)'}}></div>
 
-
-			<div style={{ flex: '0 0 auto', textAlign: 'right', marginLeft: '50px'}}>
+			<div style={{ flex: '0 0 auto', textAlign: 'middle', marginLeft: '50px'}}>
 				<ComingFromBringsYouTo locations={['1','e']}></ComingFromBringsYouTo><br></br>
 
 				{shortest_path}
+
+				<br></br><br></br><br></br><br></br>
+				<em style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Unexplored Entrances</em> &nbsp;
+				<UnexploredCheckmarks numUnavailable={2} numAvailable={1}></UnexploredCheckmarks>
+				<Box
+					sx={{
+						display: 'flex',
+						justifyContent: 'center', // Horizontal alignment
+						alignItems: 'center', // Vertical alignment
+						flexWrap: 'wrap',
+						'& > :not(style)': {
+						m: 1, // Margin
+						width: 700,
+						},
+					}}
+					>
+					<Paper
+						elevation={24}
+						sx={{
+						backgroundColor: '#444',
+						padding: 2, // Add padding inside the Paper for spacing
+						}}
+					>
+						ab<br></br><br></br>s
+					</Paper>
+				</Box>
 			</div>
 
 

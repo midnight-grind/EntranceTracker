@@ -7,10 +7,10 @@ function ComingFromBringsYouTo( {locations} )
 {
     return (
         <div>
-            Coming From &rarr; Brings You To
+            <div style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Coming From &rarr; Brings You To </div>
             <br></br><br></br>
             <div style={{display: 'inline-block'}}>
-                Sort By:
+            <div style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>   Sort By: </div>
 
             </div>
 
