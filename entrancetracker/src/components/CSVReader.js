@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Papa from 'papaparse';
 import Switch from '@mui/material/Switch';
 
@@ -33,30 +33,20 @@ function CSVReader()
 	const [shortestPathButtonVisible, setShortestPathButtonVisible] = useState(false);
 
 	// Handle file upload
-	const handleFileUpload = (event) => 
-	{
-		setCsvData([]);
-		setStartLocation('Gohma');
-		setEndLocation('Deku Tree');
-		setLocations(new Map());
-		setLocationsObjects(new Map());
-		setShortest_path([]);
-		setConditions([]);
-		setFinalConditions({});
-		setShortestPathButtonVisible(false);
-
-
+	const handleFileUpload = (event) => {
+		reset();
 		const file = event.target.files[0];
-		if (file) 
-		{
+		if (file) {
 			Papa.parse(file, {
 				complete: (result) => {
+					console.log("CSV Parsing Result:", result.data);
 					setCsvData(result.data);
 				},
-				header: true, // Treat the first row as the header
+				header: true,
 			});
 		}
 	};
+	
 
 	const handleClick = () => 
 	{
@@ -152,16 +142,14 @@ function CSVReader()
 		}
 	}
 
-	function get_location_names()
-	{
+	const locationNames = useMemo(() => {
 		let ret = [];
-		
-		for (let [key] of locations)
-		{
+		for (let [key] of locations) {
 			ret.push(key);
 		}
 		return ret;
-	}
+	}, [locations]);
+	
 
 	function get_all_conditionals(newLocationsObjects)
 	{
@@ -330,9 +318,9 @@ function CSVReader()
 
 	function isChecked(key)
 	{
-		// console.log("checked: " + final_conditions[key]["checked"]);
-		return final_conditions[key]["checked"];
+		return final_conditions[key]?.checked || false;
 	}
+	
 
 	function selectMultiCondition(key, condition)
 	{
@@ -429,62 +417,99 @@ function CSVReader()
 	}, [shortest_path]);  // This effect will run whenever `shortest_path` is updated
 	
 
-	useEffect(() => 
-	{
-		let newLocations = new Map(locations); // Clone the locations map to avoid direct mutation
-		let newLocationsObjects = new Map(locations_objects); // Clone the locations_objects map
+	// useEffect(() => 
+	// {
+	// 	let newLocations = new Map(locations); // Clone the locations map to avoid direct mutation
+	// 	let newLocationsObjects = new Map(locations_objects); // Clone the locations_objects map
 	
-		// Populate the locations map from CSV data
-		for (let i = 0; i < csvData.length; i++)
-		{
-			let coming_from = csvData[i]["Coming from"];
-			let brings_you_to = csvData[i]["Brings you to"];
-			let entrance_door = csvData[i]["Entrance Door"];
-			let exit_door = csvData[i]["Exit Door"];
-			let condition = csvData[i]["Condition"];
+	// 	// Populate the locations map from CSV data
+	// 	for (let i = 0; i < csvData.length; i++)
+	// 	{
+	// 		let coming_from = csvData[i]["Coming from"];
+	// 		let brings_you_to = csvData[i]["Brings you to"];
+	// 		let entrance_door = csvData[i]["Entrance Door"];
+	// 		let exit_door = csvData[i]["Exit Door"];
+	// 		let condition = csvData[i]["Condition"];
 			
-			if (csvData.length > 0 && coming_from)
-			{
-				if (!newLocations.has(coming_from))
-				{
-					newLocations.set(coming_from, []); // new location found, add to map
+	// 		if (csvData.length > 0 && coming_from)
+	// 		{
+	// 			if (!newLocations.has(coming_from))
+	// 			{
+	// 				newLocations.set(coming_from, []); // new location found, add to map
+	// 			}
+	
+	// 			if (!newLocationsObjects.has(coming_from))
+	// 			{
+	// 				newLocationsObjects.set(coming_from, []); // new location object found
+	// 			}
+	
+	// 			const child_locations_names = newLocations.get(coming_from);
+	// 			const child_locations_objects = newLocationsObjects.get(coming_from);
+	
+	// 			if (!child_locations_names.includes(brings_you_to))
+	// 			{
+	// 				child_locations_names.push(brings_you_to);
+	
+	// 				child_locations_objects.push({
+	// 					"brings you to": brings_you_to,
+	// 					"entrance door": entrance_door,
+	// 					"exit door": exit_door,
+	// 					"condition": condition
+	// 				});
+	// 			}
+	
+	// 			// Update maps with new arrays
+	// 			newLocations.set(coming_from, child_locations_names);
+	// 			newLocationsObjects.set(coming_from, child_locations_objects);
+	// 		}
+	// 	}
+	
+	// 	// Update the state with the modified maps
+	// 	setLocations(newLocations);
+	// 	setLocationsObjects(newLocationsObjects);
+	
+	// 	// console.log(newLocations);
+	// 	console.log("All locations:\n");
+	// 	console.log(newLocationsObjects);
+	// 	get_all_conditionals(newLocationsObjects);
+	// }, [csvData]);
+
+	useEffect(() => {
+		const newLocations = new Map();
+		const newLocationsObjects = new Map();
+	
+		csvData.forEach((row) => {
+			const coming_from = row["Coming from"];
+			const brings_you_to = row["Brings you to"];
+			if (coming_from && brings_you_to) {
+				if (!newLocations.has(coming_from)) {
+					newLocations.set(coming_from, []);
+				}
+				if (!newLocationsObjects.has(coming_from)) {
+					newLocationsObjects.set(coming_from, []);
 				}
 	
-				if (!newLocationsObjects.has(coming_from))
-				{
-					newLocationsObjects.set(coming_from, []); // new location object found
-				}
-	
-				const child_locations_names = newLocations.get(coming_from);
-				const child_locations_objects = newLocationsObjects.get(coming_from);
-	
-				if (!child_locations_names.includes(brings_you_to))
-				{
-					child_locations_names.push(brings_you_to);
-	
-					child_locations_objects.push({
-						"brings you to": brings_you_to,
-						"entrance door": entrance_door,
-						"exit door": exit_door,
-						"condition": condition
-					});
-				}
-	
-				// Update maps with new arrays
-				newLocations.set(coming_from, child_locations_names);
-				newLocationsObjects.set(coming_from, child_locations_objects);
+				newLocations.get(coming_from).push(brings_you_to);
+				newLocationsObjects.get(coming_from).push({
+					brings_you_to,
+					entrance_door: row["Entrance Door"],
+					exit_door: row["Exit Door"],
+					condition: row["Condition"],
+				});
 			}
-		}
+		});
 	
-		// Update the state with the modified maps
 		setLocations(newLocations);
 		setLocationsObjects(newLocationsObjects);
 	
-		// console.log(newLocations);
-		console.log("All locations:\n");
-		console.log(newLocationsObjects);
-		get_all_conditionals(newLocationsObjects);
+		// Invoke get_all_conditionals after updating locationsObjects
+		const conditions = get_all_conditionals(newLocationsObjects);
+		setFinalConditions(conditions);
+	
+		console.log("Updated locations and locations_objects:", newLocations, newLocationsObjects);
 	}, [csvData]);
+	
+	
 	
 	
 
@@ -505,9 +530,10 @@ function CSVReader()
 		setLocationsObjects(new Map());
 		setShortest_path([]);
 		setConditions([]);
-		setFinalConditions({});
-		setShortestPathButtonVisible(false);	
+		setFinalConditions({}); // Clear final_conditions
+		setShortestPathButtonVisible(false);
 	}
+	
 
 
 	
@@ -557,7 +583,8 @@ function CSVReader()
 						onChange={(e) => setStartLocation(e.target.value)} 
 					/>
 					
-					<LocationDropdown locations={get_location_names()}></LocationDropdown>
+					{/* <LocationDropdown locations={get_location_names()}></LocationDropdown> */}
+					<LocationDropdown locations={locationNames}></LocationDropdown>
 
 
 					<br/>
@@ -608,12 +635,12 @@ function CSVReader()
 
 				<em style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Shortest Path</em><br/><br/>
 				{/* <div style={{color: '#6BCB77', textShadow: '2px 20px 20px rgba(0, 0, 0, 0.5)' }}>  */}
-					<ShortestPath text={shortest_path}> </ShortestPath> 
+					<ShortestPath text={shortest_path} color="#6BCB77"> </ShortestPath> 
 				{/* </div> */}
 
 				<br></br><br></br><br></br>
 
-				<em style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Explored Entrances</em> &nbsp;
+				<em style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Randomized Entrances</em> &nbsp;
 				<Box
 					sx={{
 						display: 'flex',
@@ -633,13 +660,21 @@ function CSVReader()
 						padding: 2, // Add padding inside the Paper for spacing
 						}}
 					>
-						<ComingFromBringsYouTo locations={get_location_names()}></ComingFromBringsYouTo>
+						{/* <ComingFromBringsYouTo locations={get_location_names()}></ComingFromBringsYouTo> */}
+						{/* <ComingFromBringsYouTo locations={locationNames} locationsObjects={locations_objects}></ComingFromBringsYouTo> */}
+
+						<ComingFromBringsYouTo
+							locations={Array.from(locations.keys())}
+							locationsObjects={Object.fromEntries(locations_objects)}
+						/>
+
+
 					</Paper>
 				</Box>
 
 				<br/><br/>
 
-				<em style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Unexplored Entrances</em> &nbsp;
+				{/* <em style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Unexplored Entrances</em> &nbsp;
 				<UnexploredCheckmarks numUnavailable={2} numAvailable={1}></UnexploredCheckmarks>
 				<Box
 					sx={{
@@ -662,7 +697,7 @@ function CSVReader()
 					>
 						<ComingFromBringsYouTo locations={get_location_names()}></ComingFromBringsYouTo>
 					</Paper>
-				</Box>
+				</Box> */}
 
 
 				<br/><br/>
@@ -687,7 +722,12 @@ function CSVReader()
 						padding: 2, // Add padding inside the Paper for spacing
 						}}
 					>
-						<ComingFromBringsYouTo locations={get_location_names()}></ComingFromBringsYouTo>
+						{/* <ComingFromBringsYouTo locations={locationNames} locationsObjects={locations_objects}></ComingFromBringsYouTo> */}
+
+						<ComingFromBringsYouTo
+							locations={Array.from(locations.keys())}
+							locationsObjects={Object.fromEntries(locations_objects)}
+						/>
 					</Paper>
 				</Box>
 			</div>
