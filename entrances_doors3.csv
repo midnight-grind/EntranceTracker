@@ -171,7 +171,7 @@ Kakariko Village,Kakariko Potion Shop Back,To Kakariko Potion Shop Back,From Kak
 Kakariko Village,Bottom of the Well,To Bottom of the Well,From Kakariko Village,,(Child-0 && Song_of_Storms) || (Child-0 && Warp_found_out_of_Bottom_of_the_Well_Exit),
 Kakariko Village,Kakariko Village Potion Shops Grotto,To From Kakariko Village,From Kakariko Village,,,
 Kakariko Village,Kakariko Village Potion Middle Tree Grotto,To Kakariko Village Potion Middle Tree Grotto,From Kakariko Village,,Bomb_Bag || Bombchus || Megaton_Hammer,
-Kakariko Village,Death Mountain Trail,To Death Mountain Trail,From Kakariko Village,,(Child-0 && Zelda's Letter) || Adult-0,
+Kakariko Village,Death Mountain Trail,To Death Mountain Trail,From Kakariko Village,,(Child-0 && Zelda's_Letter) || Adult-0,
 Carpenter Boss House,Kakariko Village,To Kakariko Village,From Carpenter Boss House,,,
 Skulltula House,Kakariko Village,To Kakariko Village,From Skulltula House,,,
 Impa's House,Kakariko Village,To Kakariko Village Impa's House  Front,From Impa's House,,,

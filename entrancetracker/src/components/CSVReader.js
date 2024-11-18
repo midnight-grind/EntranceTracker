@@ -17,6 +17,8 @@ import UploadIcon from '@mui/icons-material/Upload'; // If using Material-UI ico
 import ComingFromBringsYouTo from './ComingFromBringsYouTo';
 import InfoIcon from '@mui/icons-material/Info';
 import UnexploredCheckmarks from './UnexploredCheckmarks';
+import LocationDropdown from './LocationDropdown';
+import ShortestPath from './ShortestPath';
 
 function CSVReader() 
 {
@@ -150,9 +152,20 @@ function CSVReader()
 		}
 	}
 
+	function get_location_names()
+	{
+		let ret = [];
+		
+		for (let [key] of locations)
+		{
+			ret.push(key);
+		}
+		return ret;
+	}
+
 	function get_all_conditionals(newLocationsObjects)
 	{
-		console.log("get all conditions");
+		// console.log("get all conditions");
 
 		let all_conditionals = {};
 		let all_conditionals_with_arrays = {};
@@ -165,7 +178,7 @@ function CSVReader()
 				{
 					let conditions_separated = obj["condition"].replaceAll("(", " ").replaceAll(")", " ").replaceAll("&&", " ").replaceAll("||", " ");
 					conditions_separated = conditions_separated.replaceAll(/\s+/g, ' ');
-					console.log(conditions_separated);
+					// console.log(conditions_separated);
 
 					for (let condition_separated of conditions_separated.split(" "))
 					{
@@ -181,7 +194,7 @@ function CSVReader()
 		// console.log(all_conditionals);
 		for (let [key, value] of Object.entries(all_conditionals))
 		{
-			console.log(key);
+			// console.log(key);
 
 			// key looks like: Song_of_Storms, child-0
 
@@ -212,7 +225,7 @@ function CSVReader()
 
 		for (let [key, value] of Object.entries(all_conditionals))
 		{
-			console.log(key);
+			// console.log(key);
 
 			// key looks like: Song_of_Storms, child-0
 
@@ -242,14 +255,14 @@ function CSVReader()
 		}
 
 		// console.log("all_conditionals: " + all_conditionals_with_arrays);
-		console.log("Formatted all_conditionals_with_arrays:", JSON.stringify(all_conditionals_with_arrays, null, 2));
+		// console.log("Formatted all_conditionals_with_arrays:", JSON.stringify(all_conditionals_with_arrays, null, 2));
 
 		// only two options, default to first option, if more than two: keep it "none" until condition is selected
 		for (let [key, value] of Object.entries(all_conditionals_with_arrays))
 		{
 			if (all_conditionals_with_arrays[key]["condition_list"].length == 2)
 			{
-				console.log("2 elements, key: " + key);
+				// console.log("2 elements, key: " + key);
 				all_conditionals_with_arrays[key]["active_condition"] = all_conditionals_with_arrays[key]["condition_list"][0];
 			}
 		}
@@ -262,7 +275,7 @@ function CSVReader()
 
 	function switch_pressed(key)
 	{
-		console.log("switch pressed", final_conditions[key]);
+		// console.log("switch pressed", final_conditions[key]);
 
 		// Create a shallow copy of final_conditions
 		const updatedConditions = { ...final_conditions };
@@ -468,6 +481,7 @@ function CSVReader()
 		setLocationsObjects(newLocationsObjects);
 	
 		// console.log(newLocations);
+		console.log("All locations:\n");
 		console.log(newLocationsObjects);
 		get_all_conditionals(newLocationsObjects);
 	}, [csvData]);
@@ -520,12 +534,12 @@ function CSVReader()
 				/>
 				
 				<div style={{ textAlign: 'left'}}>
-					<Button variant="outlined" sx={{ color: 'red', borderColor: 'red' }} onClick={reset}>Reset</Button>
+					<Button variant="outlined" sx={{ color: '#FF6B6B', borderColor: '#FF6B6B' }} onClick={reset}>Reset</Button>
 				</div>
 
-
+				<br/>
 				<div style={{ textAlign: 'left'}}>
-					<div style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Upload Entrance Template File</div><br></br>
+					<div style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Upload Entrance Template File</div>
 					<button onClick={handleIconClick} style={{ border: 'none', background: 'none', cursor: 'pointer' }}>
 						<UploadIcon style={{ fontSize: '24px', color: '#000' }} /> {/* Customize size and color */}
 					</button>
@@ -542,6 +556,10 @@ function CSVReader()
 						value={startLocation} 
 						onChange={(e) => setStartLocation(e.target.value)} 
 					/>
+					
+					<LocationDropdown locations={get_location_names()}></LocationDropdown>
+
+
 					<br/>
 					<div style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}> End Location </div> &nbsp;
 					<input 
@@ -568,7 +586,7 @@ function CSVReader()
 							<InfoIcon
 								style={{
 									fontSize: '30px', // Adjust the size of the icon
-									color: '#8B0000',    // Change the color of the icon
+									color: '#FF6B6B',    // Change the color of the icon
 								}}
 							/>
 						</Tooltip>
@@ -583,14 +601,44 @@ function CSVReader()
 
 			</div>
 
-			<div style={{ width: '2px', height: '100vh', backgroundColor: 'white', marginLeft: '30px', boxShadow: '4px 0px 10px rgba(0, 0, 0, 0.7)'}}></div>
+			<div style={{ width: '2px', height: '100vh', backgroundColor: 'light-gray', marginLeft: '30px', boxShadow: '4px 0px 10px rgba(0, 0, 0, 0.7)'}}></div>
 
 			<div style={{ flex: '0 0 auto', textAlign: 'middle', marginLeft: '50px'}}>
-				<ComingFromBringsYouTo locations={['1','e']}></ComingFromBringsYouTo><br></br>
+				{/* <ComingFromBringsYouTo locations={['1','e']}></ComingFromBringsYouTo><br></br> */}
 
-				{shortest_path}
+				<em style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Shortest Path</em><br/><br/>
+				{/* <div style={{color: '#6BCB77', textShadow: '2px 20px 20px rgba(0, 0, 0, 0.5)' }}>  */}
+					<ShortestPath text={shortest_path}> </ShortestPath> 
+				{/* </div> */}
 
-				<br></br><br></br><br></br><br></br>
+				<br></br><br></br><br></br>
+
+				<em style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Explored Entrances</em> &nbsp;
+				<Box
+					sx={{
+						display: 'flex',
+						justifyContent: 'center', // Horizontal alignment
+						alignItems: 'center', // Vertical alignment
+						flexWrap: 'wrap',
+						'& > :not(style)': {
+						m: 1, // Margin
+						width: 700,
+						},
+					}}
+					>
+					<Paper
+						elevation={24}
+						sx={{
+						backgroundColor: '#444',
+						padding: 2, // Add padding inside the Paper for spacing
+						}}
+					>
+						<ComingFromBringsYouTo locations={get_location_names()}></ComingFromBringsYouTo>
+					</Paper>
+				</Box>
+
+				<br/><br/>
+
 				<em style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Unexplored Entrances</em> &nbsp;
 				<UnexploredCheckmarks numUnavailable={2} numAvailable={1}></UnexploredCheckmarks>
 				<Box
@@ -612,10 +660,40 @@ function CSVReader()
 						padding: 2, // Add padding inside the Paper for spacing
 						}}
 					>
-						ab<br></br><br></br>s
+						<ComingFromBringsYouTo locations={get_location_names()}></ComingFromBringsYouTo>
+					</Paper>
+				</Box>
+
+
+				<br/><br/>
+
+				<em style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Vanilla Entrances</em> &nbsp;
+				<Box
+					sx={{
+						display: 'flex',
+						justifyContent: 'center', // Horizontal alignment
+						alignItems: 'center', // Vertical alignment
+						flexWrap: 'wrap',
+						'& > :not(style)': {
+						m: 1, // Margin
+						width: 700,
+						},
+					}}
+					>
+					<Paper
+						elevation={24}
+						sx={{
+						backgroundColor: '#444',
+						padding: 2, // Add padding inside the Paper for spacing
+						}}
+					>
+						<ComingFromBringsYouTo locations={get_location_names()}></ComingFromBringsYouTo>
 					</Paper>
 				</Box>
 			</div>
+
+
+			<div style={{ width: '2px', height: '100vh', backgroundColor: 'light-gray', marginLeft: '30px', boxShadow: '4px 0px 10px rgba(0, 0, 0, 0.7)'}}></div>
 
 
 

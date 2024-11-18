@@ -1,0 +1,24 @@
+.wavy-text {
+    display: inline-block;
+    white-space: nowrap; /* Prevents wrapping */
+  }
+  
+  .wavy-letter {
+    display: inline-block;
+    position: relative;
+    animation: wavy-bounce 5s ease-in-out infinite;
+    animation-fill-mode: both; /* Ensures the animation starts fresh */
+  }
+  
+  @keyframes wavy-bounce {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  

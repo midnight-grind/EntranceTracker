@@ -1,28 +1,24 @@
-.App {
-  text-align: center;
-}
-
 .App-header {
-  background: linear-gradient(135deg, #6a994e, #d9534f); /* Jewel tones: emerald green to ruby red */
+  background: linear-gradient(210deg, #25544f, #4c566a); /* Muted dark tones: dark gray to soft gray-blue */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #d8dee9; /* Light gray text for readability */
 }
 
 .App-link {
-  color: #ffd700; /* Optional: gold color for links to enhance the jewel tone */
+  color: #88c0d0; /* Calming teal for links */
 }
 
 .container {
   display: flex;
-  justify-content: center;  /* Center horizontally */
-  align-items: center;      /* Center vertically */
-  height: 100vh;            /* Full viewport height to center vertically */
-  position: relative;       /* Allows absolute positioning for file input */
+  justify-content: center; /* Center horizontally */
+  align-items: center;     /* Center vertically */
+  height: 100vh;           /* Full viewport height to center vertically */
+  position: relative;      /* Allows absolute positioning for file input */
 }
 
 .top-left {
@@ -44,5 +40,5 @@ body, html {
   width: 100%;
   height: 100%;
   overflow: hidden; /* Prevents any scrollbars */
-  background-color: transparent; /* To match the background with the canvas */
+  background-color: #3b4252; /* Deep gray-blue background for extra contrast */
 }
