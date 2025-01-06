@@ -4,13 +4,17 @@ import NodeGroup from './components/NodeGroup';
 import TextField from '@mui/material/TextField';
 import CSVReader from './components/CSVReader';
 import SwirlCanvas from './components/SwirlCanvas';
+import TemplateReader from './components/TemplateReader';
+import PathFinder from './components/PathFinder';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <div className="top-left">
-          <CSVReader />
+          {/* <CSVReader /> */}
+          {/* <TemplateReader></TemplateReader> */}
+          <PathFinder></PathFinder>
         </div>
       </header>
       {/* <SwirlCanvas /> */}
