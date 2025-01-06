@@ -11,29 +11,37 @@ function PathFinder()
         // console.log("kokiri forest paths: " + defaultPaths["Kokiri Forest"]);
         // console.log("default paths: " + JSON.stringify(defaultPaths, null, 2));
 
-        for (const key of Object.keys(defaultPaths))
-        {
-            // console.log("coming from: " + key);
-
-            for (const path of defaultPaths[key])
-            {
-                console.log(key + " brings you to: " + path["brings_you_to"]);
-            }
-        }
-
+        printPaths(defaultPaths);
 
         searchPaths(defaultPaths, "Kokiri Forest");
     }
     
-    function getPaths(startLocation, endLocation)
-    {
-
-    }
-
     function searchPaths(defaultPaths, startLocation, endLocation)
     {
         let searchedPaths = {};
 
+        console.log("");
+
+    }
+
+    function searchPathsRecursive(paths, currentLocation)
+    {
+        let nextPaths = paths[currentLocation];
+
+        for (const nextPath of nextPaths)
+        {
+            // if (pathSeen(currentLocation, ))
+        }
+    }
+
+
+    // gets every path you can take from start location to end location
+    // sometimes contains multiple paths 
+    function getPaths(coming_from, brings_you_to, allPaths)
+    {
+        let allComingFromPaths = allPaths[coming_from];
+
+        console.log("allComingFromPaths: " + allComingFromPaths);
     }
 
     function pathSeen(coming_from, targetPath, searchedPaths)
@@ -50,24 +58,27 @@ function PathFinder()
                 targetPath["exit_door"] === locationPath["exit_door"]
             )
                 return true;
-            
         }
 
         return false;
     }
 
-    function searchPathsRecursive(paths, currentLocation)
+    function printPaths(paths)
     {
-        let nextPaths = paths[currentLocation];
-
-        for (const nextPath of nextPaths)
+        console.log("\nprinting all paths: \n");
+        for (const key of Object.keys(paths))
         {
-            if (pathSeen(currentLocation, ))
+
+            for (const path of paths[key])
+            {
+                console.log(key + " brings you to: " + path["brings_you_to"]);
+            }
         }
     }
 
     return (
         <div>
+            s
             <TemplateReader sendDataToParent={handleTemplateUploading}></TemplateReader>
         </div>
     );
