@@ -14,39 +14,72 @@ function PathFinder()
         // getPathsBetween("Kokiri Forest", "Lost Woods", defaultPaths);
         // printAllPaths(defaultPaths);
 
-        console.log(getLegsBetween("Kokiri Forest", "Lost Woods", locations));
-        console.log(locations["Kokiri Forest"]);
+        // console.log(getLegsBetween("Kokiri Forest", "Lost Woods", locations));
+        // console.log(locations["Kokiri Forest"]);
 
-        // searchPaths("Kokiri Forest", "Lost Woods", locations);
+        findPaths("Kokiri Forest", "Lost Woods", locations);
     }
     
-    function searchPaths(startLocation, endLocation, locations)
+    function findPaths(startLocation, endLocation, locations)
     {
-        let searchedPaths = {};
-
         // searchedPaths[startLocation] = getPathsBetween(startLocation, endLocation, defaultPaths);
-    
-        console.log("searchedPaths: \n");
-        printAllPaths(searchedPaths);
+        // console.log("searchedLegs: \n");
+        // printAllLocations(searchedLegs);
 
+        // this will be a list of lists where the elements are locations
+        // ex: [ [kokiri forest, lost woods, zora river], [kokiri forest, lost woods, hyrule field, zora river] ]
+        let finalPaths = [];
+        let visitedLegs = {};
 
+        searchPathsRecursive(startLocation, endLocation, visitedLegs, [], finalPaths, locations);
+
+        printFinalPaths(finalPaths);
     }
 
-    function testAdd(searchedPaths, startLocation, item)
+    function searchPathsRecursive(currentLocation, endLocation, visitedLegs, currentPath, finalPaths, locations)
     {
-        searchedPaths[startLocation] = item;
-    }
+        let currentPathCopy = [...currentPath];
+        let legs = locations[currentLocation];
+        currentPathCopy.push(currentLocation);
 
-    function searchPathsRecursive(currentLocation, locations)
-    {
-        let nextPaths = locations[currentLocation];
+        console.log("current path: " + currentPathCopy);
 
-        for (const nextPath of nextPaths)
+        if (currentLocation === endLocation)
         {
-            // if (pathSeen(currentLocation, ))
+            // console.log("destination reached\n\n");
+            console.log('%cdestination reached\n\n', 'color: blue; font-size: 16px; font-weight: bold;');
+
+            finalPaths.push(currentPathCopy);
+            return;
+        }
+        
+        // return;
+
+        // console.log("next legs to visit: " + legs);
+        for (const nextLeg of legs)
+        {
+            // console.log("leg: " + nextLeg["brings_you_to"]);
+            if (!legVisited(currentLocation, nextLeg, visitedLegs))
+            {
+                addToVisitedLegs(currentLocation, nextLeg, visitedLegs);
+
+                // console.log("nextLeg NOT visited\n\n");
+                searchPathsRecursive(nextLeg["brings_you_to"], endLocation, visitedLegs, currentPathCopy, finalPaths, locations);
+            }
+
         }
     }
 
+    function addToVisitedLegs(currentLocation, nextLeg, visitedLegs)
+    {
+        if (!visitedLegs[currentLocation])
+        {
+            visitedLegs[currentLocation] = [];
+        }
+
+        // mark current location as visited
+        visitedLegs[currentLocation].push(nextLeg);
+    }
 
     /* gets every 1-hop leg between start and end locations
         sometimes multiple loading zones to get to same end from start
@@ -65,42 +98,52 @@ function PathFinder()
         return ret;
     }
 
-    function legVisited(coming_from, targetPath, searchedPaths)
+    function legVisited(coming_from, targetLeg, visitedLegs)
     {
-        let locationPaths = searchedPaths[coming_from];
+        let visitedLegList = visitedLegs[coming_from];
         
-        if (locationPaths === undefined)
+        if (visitedLegList === undefined)
             return false;
 
-        for (const locationPath of locationPaths)
+        for (const visitedLeg of visitedLegList)
         {
-            if (targetPath["brings_you_to"] === locationPath["brings_you_to"] &&
-                targetPath["entrance_door"] === locationPath["entrance_door"] &&
-                targetPath["exit_door"] === locationPath["exit_door"]
+            if (targetLeg["brings_you_to"] === visitedLeg["brings_you_to"] &&
+                targetLeg["entrance_door"] === visitedLeg["entrance_door"] &&
+                targetLeg["exit_door"] === visitedLeg["exit_door"]
             )
-                return true;
+            return true;
         }
 
         return false;
     }
 
-    function printPaths(paths)
+    function printLocations(locations)
     {
-        for (const path of paths)
+        for (const location of locations)
         {
-            console.log(path);
+            console.log(location);
         }
     }
 
-    function printAllPaths(paths)
+    function printAllLocations(locations)
     {
         console.log("\nprinting all paths: \n");
-        for (const key of Object.keys(paths))
-        {
-            for (const path of paths[key])
+        for (const coming_from of Object.keys(locations))
+        {   
+            const legs = locations[coming_from];
+            for (const leg of legs)
             {
-                console.log(key + " brings you to: " + path["brings_you_to"]);
+                console.log(coming_from + " brings you to: " + leg["brings_you_to"]);
             }
+        }
+    }
+
+    function printFinalPaths(finalPaths)
+    {
+        console.log("final paths: ");
+        for (const path of finalPaths)
+        {
+            console.log(path);
         }
     }
 
@@ -114,3 +157,9 @@ function PathFinder()
 }
 
 export default PathFinder;
+
+
+// notes
+// shouldn't traverse the same leg twice
+// shouldn't traverse the reverse of a leg if it brings you back to where you started (or should you? idk it's a weird one)
+// leg entrance door should not take you to previous location
