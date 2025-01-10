@@ -3,30 +3,43 @@ import TemplateReader from "./TemplateReader";
 
 function PathFinder()
 {
-    const [defaultPaths, setDefaultPaths] = useState({});
+    const [locations, setLocations] = useState({});
 
-    function handleTemplateUploading(defaultPaths)
+    function handleTemplateUploading(locations)
     {
-        setDefaultPaths(defaultPaths);
+        setLocations(locations);
         // console.log("kokiri forest paths: " + defaultPaths["Kokiri Forest"]);
         // console.log("default paths: " + JSON.stringify(defaultPaths, null, 2));
 
-        printPaths(defaultPaths);
+        // getPathsBetween("Kokiri Forest", "Lost Woods", defaultPaths);
+        // printAllPaths(defaultPaths);
 
-        searchPaths(defaultPaths, "Kokiri Forest");
+        console.log(getLegsBetween("Kokiri Forest", "Lost Woods", locations));
+        console.log(locations["Kokiri Forest"]);
+
+        // searchPaths("Kokiri Forest", "Lost Woods", locations);
     }
     
-    function searchPaths(defaultPaths, startLocation, endLocation)
+    function searchPaths(startLocation, endLocation, locations)
     {
         let searchedPaths = {};
 
-        console.log("");
+        // searchedPaths[startLocation] = getPathsBetween(startLocation, endLocation, defaultPaths);
+    
+        console.log("searchedPaths: \n");
+        printAllPaths(searchedPaths);
+
 
     }
 
-    function searchPathsRecursive(paths, currentLocation)
+    function testAdd(searchedPaths, startLocation, item)
     {
-        let nextPaths = paths[currentLocation];
+        searchedPaths[startLocation] = item;
+    }
+
+    function searchPathsRecursive(currentLocation, locations)
+    {
+        let nextPaths = locations[currentLocation];
 
         for (const nextPath of nextPaths)
         {
@@ -35,19 +48,27 @@ function PathFinder()
     }
 
 
-    // gets every path you can take from start location to end location
-    // sometimes contains multiple paths 
-    function getPaths(coming_from, brings_you_to, allPaths)
+    /* gets every 1-hop leg between start and end locations
+        sometimes multiple loading zones to get to same end from start
+        (example you can get directly to Lost Woods from Kokiri Forest through 2 entrances)  */
+    function getLegsBetween(coming_from, brings_you_to, locations)
     {
-        let allComingFromPaths = allPaths[coming_from];
+        let ret = [];
 
-        console.log("allComingFromPaths: " + allComingFromPaths);
+        let legs = locations[coming_from];
+        for (const leg of legs)
+        {
+            if (leg["brings_you_to"] === brings_you_to)  // end location matches
+                ret.push(leg);
+        }
+
+        return ret;
     }
 
-    function pathSeen(coming_from, targetPath, searchedPaths)
+    function legVisited(coming_from, targetPath, searchedPaths)
     {
         let locationPaths = searchedPaths[coming_from];
-
+        
         if (locationPaths === undefined)
             return false;
 
@@ -65,10 +86,17 @@ function PathFinder()
 
     function printPaths(paths)
     {
+        for (const path of paths)
+        {
+            console.log(path);
+        }
+    }
+
+    function printAllPaths(paths)
+    {
         console.log("\nprinting all paths: \n");
         for (const key of Object.keys(paths))
         {
-
             for (const path of paths[key])
             {
                 console.log(key + " brings you to: " + path["brings_you_to"]);
