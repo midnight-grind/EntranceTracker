@@ -75,7 +75,7 @@ function TemplateReader(props) {
 
     return (
         <div>
-            <h1>CSV Reader</h1>
+            <h2>Template Reader</h2>
             <input type="file" accept=".csv" onChange={combinedHandler} />
         </div>
     );
